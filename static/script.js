@@ -24,5 +24,8 @@ function nextCard() {
     showCard();
 }
 
+function updateCard(){
+    
+}
 
 window.onload = loadFlashcards;
