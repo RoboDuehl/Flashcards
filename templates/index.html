@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Vocabulary Flashcards</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <div id="flashcard-container">
+        <div id="flashcard">
+            <h2 id="word">Loading...</h2>
+            <p id="meaning"></p>
+            <p id="example"></p>
+        </div>
+        <button onclick="nextCard()">Next</button>
+    </div>
+    <script src="{{ url_for('static', filename='script.js') }}"></script>
+</body>
+</html>
