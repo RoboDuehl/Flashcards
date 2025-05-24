@@ -16,8 +16,13 @@ function showCard() {
 }
 
 function nextCard() {
-    current = (current + 1) % flashcards.length;
+    let next;
+    do {
+        next = Math.floor(Math.random() * flashcards.length);
+    } while (next === current);
+    current = next;
     showCard();
 }
+
 
 window.onload = loadFlashcards;
