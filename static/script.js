@@ -20,4 +20,34 @@ function nextCard() {
     showCard();
 }
 
+function updateFlashcard() {
+    const word = document.getElementById("word").innerText;
+    const meaning = prompt("Enter new meaning:");
+    const example = prompt("Enter new example:");
+
+    fetch("/api/flashcards/update", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify({ word, meaning, example })
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            alert("Flashcard updated successfully!");
+            // Optionally update UI:
+            document.getElementById("meaning").innerText = meaning;
+            document.getElementById("example").innerText = example;
+        } else {
+            alert("Error: " + (data.error || "Unknown error"));
+        }
+    })
+    .catch(error => {
+        console.error("Update failed:", error);
+        alert("Failed to update flashcard.");
+    });
+}
+
+
 window.onload = loadFlashcards;
