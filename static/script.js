@@ -16,7 +16,12 @@ function showCard() {
 }
 
 function nextCard() {
-    current = (current + 1) % flashcards.length;
+    if (flashcards.length === 0) return;
+    current = Math.floor(Math.random() * flashcards.length);
+    console.log("Flashcards length:", flashcards.length);
+    console.log("Current index:", current);
+    console.log("Card:", flashcards[current]);
+
     showCard();
 }
 
