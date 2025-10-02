@@ -4,3 +4,10 @@ CREATE TABLE vocabulary (
     meaning TEXT NOT NULL,
     example TEXT
 );
+
+CREATE TABLE psychology (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    word TEXT NOT NULL,
+    meaning TEXT NOT NULL,
+    example TEXT
+);

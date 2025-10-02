@@ -9,9 +9,19 @@ def get_db_connection():
     return conn
 
 
+def get_table_names():
+    conn = sqlite3.connect('vocab.db')
+    cursor = conn.cursor()
+    cursor.execute("SELECT name FROM sqlite_master WHERE type='table';")
+    tables = [row[0] for row in cursor.fetchall()]
+    conn.close()
+    return tables
+
 @app.route('/')
 def index():
-    return render_template('index.html')
+    categories = get_table_names()
+    print("Available tables:", categories)  # Debug print
+    return render_template('index.html', categories=categories)
 
 @app.route('/api/flashcards')
 def flashcards():
@@ -19,6 +29,7 @@ def flashcards():
     words = conn.execute('SELECT * FROM vocabulary').fetchall()
     conn.close()
     return jsonify([dict(word) for word in words])
+
 
 
 @app.route('/api/flashcards/update', methods=['POST'])
@@ -49,6 +60,38 @@ def update_flashcard():
         return jsonify({'error': 'Word not found'}), 404
 
     return jsonify({'success': True})
+
+
+@app.route('/api/flashcards/add', methods=['POST'])
+def add_flashcard_api():
+    data = request.get_json()
+    word = data.get('word')
+    meaning = data.get('meaning')
+    example = data.get('example')
+    category = data.get('category')  # This is the table name
+
+    if not word or not meaning or not category:
+        return jsonify({'success': False, 'error': 'Missing required fields'}), 400
+
+    # SECURITY CHECK: validate the table name
+    allowed_tables = get_table_names()  # You define this function
+    if category not in allowed_tables:
+        return jsonify({'success': False, 'error': 'Invalid category (table name)'}), 400
+
+    try:
+        conn = sqlite3.connect('vocab.db')
+        cursor = conn.cursor()
+        
+        # Use string formatting carefully; table names can't be parameterized
+        sql = f"INSERT INTO {category} (word, meaning, example) VALUES (?, ?, ?)"
+        cursor.execute(sql, (word, meaning, example))
+        conn.commit()
+        conn.close()
+
+        return jsonify({'success': True})
+    
+    except Exception as e:
+        return jsonify({'success': False, 'error': str(e)}), 500
 
 if __name__ == '__main__':
     app.run(debug=True)

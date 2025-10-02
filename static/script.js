@@ -54,5 +54,44 @@ function updateFlashcard() {
     });
 }
 
+function addFlashcard(event) {
+    event.preventDefault(); // Prevent form from submitting the old-fashioned way
+
+    const word = document.getElementById("word").value.trim();
+    const meaning = document.getElementById("meaning").value.trim();
+    const example = document.getElementById("example").value.trim();
+    const category = document.getElementById("category").value;
+
+    if (!word || !meaning) {
+        alert("Word and meaning are required.");
+        return false;
+    }
+
+    fetch("/api/flashcards/add", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify({ word, meaning, example, category })
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            alert("Flashcard added successfully!");
+
+            // Clear form (optional)
+            document.getElementById("addForm").reset();
+        } else {
+            alert("Error: " + (data.error || "Unknown error"));
+        }
+    })
+    .catch(error => {
+        console.error("Add failed:", error);
+        alert("Failed to add flashcard.");
+    });
+
+    return false; // Prevent default form submission just in case
+}
+
 
 window.onload = loadFlashcards;

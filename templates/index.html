@@ -6,14 +6,36 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
 <body>
+    
     <div id="flashcard-container">
         <div id="flashcard">
             <h2 id="word">Loading...</h2>
             <p id="meaning"></p>
             <p id="example"></p>
         </div>
+        <div style="flex">
         <button onclick="nextCard()">Next</button>
         <button onclick="updateFlashcard()">Update</button>
+        </div>
+        
+    <form action="/update_flashcard" method="post">
+        <input type="text" name="word" placeholder="Word" required>
+        <input type="text" name="meaning" placeholder="Meaning" required>
+        <input type="text" name="example" placeholder="Example Sentence">
+
+        <label for="category">Subject:</label>
+        <select name="category" id="category">
+            {% for category in categories %}
+                <option value="{{ category }}">{{ category }}</option>
+            {% endfor %}
+        </select>
+
+        <div style="text-align: center;">
+            <button type="submit">Add Flashcard</button>
+        </div>
+        </form>
+
+</form>
     </div>
     <script src="{{ url_for('static', filename='script.js') }}"></script>
 </body>
